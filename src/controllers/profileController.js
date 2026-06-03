@@ -524,9 +524,18 @@ exports.uploadCV = async (req, res) => {
                 userId: req.user.userId,
             },
 
-            data: {
+            update: {
                 cvUrl: `/uploads/cv/${req.file.filename}`,
                 cvParsed: false,
+                cvParsedText: null,
+            },
+
+            create: {
+                userId: req.user.userId,
+                cvUrl: `/uploads/cv/${req.file.filename}`,
+                cvParsed: false,
+                cvParsedText: null,
+                isCompleted: false,
             },
         });
 
@@ -591,16 +600,6 @@ exports.parseCV = async (req, res) => {
                     "CV berhasil diupload, tetapi layanan parsing CV sedang tidak tersedia. Silakan isi data anda secara manual.",
             });
         }
-
-        await prisma.profile.update({
-            where: {
-                userId: req.user.userId,
-            },
-            data: {
-                cvParsed: true,
-                cvParsedText: JSON.stringify(result),
-            },
-        });
 
         return res.json({
             success: true,
