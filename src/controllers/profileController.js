@@ -583,11 +583,19 @@ exports.parseCV = async (req, res) => {
 
         const result = await response.json();
 
+        if (!response.ok || result.detail === "Not Found") {
+            return res.status(503).json({
+                success: false,
+                code: "AI_SERVICE_UNAVAILABLE",
+                message:
+                    "CV berhasil diupload, tetapi layanan parsing CV sedang tidak tersedia."
+            });
+        }
+
         await prisma.profile.update({
             where: {
                 userId: req.user.userId,
             },
-
             data: {
                 cvParsed: true,
                 cvParsedText: JSON.stringify(result),
