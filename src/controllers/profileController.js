@@ -600,7 +600,12 @@ exports.parseCV = async (req, res) => {
                     "CV berhasil diupload, tetapi layanan parsing CV sedang tidak tersedia. Silakan isi data anda secara manual.",
             });
         }
-
+        if (!result) {
+            return res.status(500).json({
+                success: false,
+                message: "AI parser tidak mengembalikan data",
+            });
+        }
         return res.json({
             success: true,
             data: result,
