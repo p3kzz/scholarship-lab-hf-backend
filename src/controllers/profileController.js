@@ -519,7 +519,7 @@ exports.uploadCV = async (req, res) => {
             });
         }
 
-        const profile = await prisma.profile.update({
+        const profile = await prisma.profile.upsert({
             where: {
                 userId: req.user.userId,
             },
