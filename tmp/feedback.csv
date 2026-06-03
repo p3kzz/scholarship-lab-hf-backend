@@ -1,0 +1,12 @@
+student_id,scholarship_id,feedback_type
+3,SCH_000016,apply
+3,SCH_000016,accepted
+3,SCH_000016,click
+3,SCH_000031,click
+3,SCH_000028,click
+3,SCH_000027,click
+4,SCH_000035,click
+4,SCH_000037,click
+4,SCH_000037,apply
+4,SCH_000037,accepted
+4,SCH_000022,click

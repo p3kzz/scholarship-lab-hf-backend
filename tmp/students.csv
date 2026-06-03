@@ -1,0 +1,5 @@
+student_id,nationality,age,high_school_track,overall_report_card_average,math_score,english_score,major_subject_average,family_income_category,from_underrepresented_region,intended_career_track,personal_statement,achievements_narrative,future_goals
+1,Indonesia,17,IPA (science),90,,,,Low Income,true,Industry / Tech,,,
+2,Indonesia,17,IPA (science),100,,,,Low Income,false,Academic / Research,,,
+3,Indonesia,17,IPS (social studies),97,98,93,82,high,false,Entrepreneurship,,,
+4,Indonesia,17,IPS (Social Studies),12,12,40,83,Very Low Income,true,Industry / Tech,,,

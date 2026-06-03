@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int              @id @default(autoincrement())
+  name            String
+  email           String           @unique
+  password        String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  feedbacks       Feedback[]
+  profile         Profile?
+  recommendations Recommendation[]
+}
+
+model Profile {
+  id                         Int                   @id @default(autoincrement())
+  userId                     Int                   @unique
+  fullName                   String?
+  gender                     String?
+  birthDate                  DateTime?
+  nationality                String?               @default("Indonesia")
+  province                   String?
+  familyIncomeCategory       String?
+  fromUnderrepresentedRegion Boolean?
+  currentDegreeLevel         String?
+  targetDegreeLevel          String?
+  schoolName                 String?
+  highSchoolTrack            String?
+  schoolTier                 String?
+  expectedGraduationYear     Int?
+  reportAverage              Float?
+  mathScore                  Float?
+  englishScore               Float?
+  majorSubjectAverage        Float?
+  extracurricularText        String?               @db.Text
+  olympiadLevel              String?
+  intendedCareerTrack        String?
+  willingReturnHome          Boolean?
+  needsFullFunding           Boolean?
+  personalStatement          String?               @db.Text
+  achievementsNarrative      String?               @db.Text
+  futureGoals                String?               @db.Text
+  isCompleted                Boolean               @default(false)
+  createdAt                  DateTime              @default(now())
+  updatedAt                  DateTime              @updatedAt
+  cvParsedText               String?               @db.LongText
+  cvUrl                      String?               @db.Text
+  cvParsed                   Boolean               @default(false)
+  languageCertificates       LanguageCertificate[]
+  user                       User                  @relation(fields: [userId], references: [id])
+  skills                     Skill[]
+  targetCountries            TargetCountry[]
+}
+
+model Skill {
+  id        Int       @id @default(autoincrement())
+  profileId Int
+  name      String
+  type      SkillType
+  createdAt DateTime  @default(now())
+  profile   Profile   @relation(fields: [profileId], references: [id])
+
+  @@index([profileId], map: "Skill_profileId_fkey")
+}
+
+model TargetCountry {
+  id        Int      @id @default(autoincrement())
+  profileId Int
+  country   String
+  createdAt DateTime @default(now())
+  profile   Profile  @relation(fields: [profileId], references: [id])
+
+  @@index([profileId], map: "TargetCountry_profileId_fkey")
+}
+
+model LanguageCertificate {
+  id        Int      @id @default(autoincrement())
+  profileId Int
+  name      String
+  score     String
+  createdAt DateTime @default(now())
+  profile   Profile  @relation(fields: [profileId], references: [id])
+
+  @@index([profileId], map: "LanguageCertificate_profileId_fkey")
+}
+
+model Scholarship {
+  id                        Int              @id @default(autoincrement())
+  scholarshipId             String           @unique
+  name                      String
+  link                      String?
+  eligibleNationalities     Json?
+  eligibleDegreeLevels      Json?
+  eligibleHighSchoolTracks  Json?
+  eligibleFields            Json?
+  preferredSchoolTier       String?
+  minAge                    Int?
+  maxAge                    Int?
+  minReportCardAverage      Float?
+  minMajorSubjectAverage    Float?
+  languageRequirements      Json?
+  requiresFinancialNeed     Boolean          @default(false)
+  maxFamilyIncomeCategory   String?
+  hostCountry               String?
+  hostRegion                String?
+  selectionCriteria         Json?
+  careerTrackPreference     String?
+  requiresReturnHomeCountry Boolean          @default(false)
+  missionStatement          String?          @db.Text
+  targetRecipientProfile    String?          @db.Text
+  fundingCoversTuition      Boolean          @default(false)
+  fundingCoversLiving       Boolean          @default(false)
+  fundingCoversAirfare      Boolean          @default(false)
+  fundingCoversInsurance    Boolean          @default(false)
+  fundingMonthlyStipend     Float?
+  fundingIsFullFunding      Boolean          @default(false)
+  fundingCoverageCount      Int?
+  createdAt                 DateTime         @default(now())
+  updatedAt                 DateTime         @updatedAt
+  feedbacks                 Feedback[]
+  recommendations           Recommendation[]
+}
+
+model Feedback {
+  id            Int          @id @default(autoincrement())
+  userId        Int
+  scholarshipId Int
+  feedbackType  FeedbackType
+  createdAt     DateTime     @default(now())
+  scholarship   Scholarship  @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, scholarshipId, feedbackType])
+  @@index([userId])
+  @@index([scholarshipId])
+}
+
+model Recommendation {
+  id            Int         @id @default(autoincrement())
+  userId        Int
+  scholarshipId Int
+  rank          Int
+  score         Float
+  createdAt     DateTime    @default(now())
+  scholarship   Scholarship @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, scholarshipId])
+  @@index([userId])
+  @@index([scholarshipId])
+}
+
+enum SkillType {
+  HARD
+  SOFT
+  LANGUAGE
+}
+
+enum FeedbackType {
+  click
+  apply
+  accepted
+}
