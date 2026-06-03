@@ -588,7 +588,7 @@ exports.parseCV = async (req, res) => {
                 success: false,
                 code: "AI_SERVICE_UNAVAILABLE",
                 message:
-                    "CV berhasil diupload, tetapi layanan parsing CV sedang tidak tersedia."
+                    "CV berhasil diupload, tetapi layanan parsing CV sedang tidak tersedia. Silakan isi data anda secara manual.",
             });
         }
 
