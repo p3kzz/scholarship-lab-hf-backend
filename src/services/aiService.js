@@ -7,7 +7,7 @@ const {
 
 const aiApi = axios.create({
     baseURL: process.env.AI_API_URL,
-    timeout: 120000,
+    timeout: 300000, // 5 minutes
     headers: {
         Authorization:
             `Bearer ${process.env.HF_TOKEN}`
