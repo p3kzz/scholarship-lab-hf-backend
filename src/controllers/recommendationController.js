@@ -232,10 +232,13 @@ exports.getRecommendations =
                 )
             )
 
-            return res.json({
-                recommendations:
-                    merged,
-            })
+            console.log("BEFORE RESPONSE");
+
+            res.json({
+                recommendations: merged,
+            });
+
+            console.log("AFTER RESPONSE");
 
         } catch (error) {
 
@@ -284,9 +287,13 @@ exports.getSavedRecommendations =
                     }
                 })
 
-            return res.json({
-                recommendations
-            })
+            console.log("BEFORE RESPONSE");
+
+            res.json({
+                recommendations: merged,
+            });
+
+            console.log("AFTER RESPONSE");
 
         } catch (error) {
 
