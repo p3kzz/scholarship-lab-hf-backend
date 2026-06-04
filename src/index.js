@@ -90,11 +90,11 @@ app.post(
     profileController.uploadCV
 );
 
-app.get(
-    '/profile/parse-cv',
-    authMiddleware,
-    profileController.parseCV
-);
+// app.get(
+//     '/profile/parse-cv',
+//     authMiddleware,
+//     profileController.parseCV
+// );
 
 const PORT = process.env.PORT || 3000;
 

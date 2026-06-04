@@ -115,7 +115,14 @@ exports.refreshRecommendations =
                     .map(c => c.country)
                     .join(",")
         }
-
+console.log(
+    "AI PAYLOAD:",
+    JSON.stringify(
+        payload,
+        null,
+        2
+    )
+)
         const aiResult =
             await aiService.recommend(
                 payload,
