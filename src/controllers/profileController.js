@@ -6,6 +6,7 @@ const recommendationService =
 
 const fs = require("fs");
 const FormData = require("form-data");
+const axios = require("axios");
 
 exports.completeOnboarding = async (req, res) => {
     try {
@@ -595,40 +596,51 @@ exports.parseCV = async (req, res) => {
             "FINAL URL:",
             `${process.env.AI_API_URL}/parse-cv`
         );
-        const response = await fetch(
+        const response = await axios.post(
             `${process.env.AI_API_URL}/parse-cv`,
+            formData,
             {
-                method: "POST",
-                body: formData,
-                headers: formData.getHeaders(),
+                headers: {
+                    ...formData.getHeaders(),
+                },
+                maxBodyLength: Infinity,
+                maxContentLength: Infinity,
             }
         );
 
-        const result = await response.json();
+        const result = response.data;
+
         console.log("AI RESPONSE:", result);
         console.log("AI STATUS:", response.status);
-        if (!response.ok || result.detail === "Not Found") {
-            return res.status(503).json({
-                success: false,
-                code: "AI_SERVICE_UNAVAILABLE",
-                message:
-                    "CV berhasil diupload, tetapi layanan parsing CV sedang tidak tersedia. Silakan isi data anda secara manual.",
-            });
-        }
+
         if (!result) {
             return res.status(500).json({
                 success: false,
                 message: "AI parser tidak mengembalikan data",
             });
         }
+
         return res.json({
             success: true,
             data: result,
         });
-
     } catch (error) {
 
         console.error(error);
+
+        if (error.response) {
+
+            console.error(
+                "AI ERROR STATUS:",
+                error.response.status
+            );
+
+            console.error(
+                "AI ERROR DATA:",
+                error.response.data
+            );
+
+        }
 
         return res.status(500).json({
             message: error.message,
