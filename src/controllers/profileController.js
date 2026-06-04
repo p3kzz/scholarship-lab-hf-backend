@@ -591,7 +591,8 @@ exports.parseCV = async (req, res) => {
         );
 
         const result = await response.json();
-
+        console.log("AI RESPONSE:", result);
+        console.log("AI STATUS:", response.status);
         if (!response.ok || result.detail === "Not Found") {
             return res.status(503).json({
                 success: false,
