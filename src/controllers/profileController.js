@@ -580,7 +580,10 @@ exports.parseCV = async (req, res) => {
                 "." + profile.cvUrl
             )
         );
-
+console.log(
+    "AI URL:",
+    `${process.env.AI_API_URL}/parse-cv`
+);
         const response = await fetch(
             `${process.env.AI_API_URL}/parse-cv`,
             {
