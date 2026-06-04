@@ -77,6 +77,11 @@ app.post('/feedback', authMiddleware, feedbackController.createFeedback)
 app.get('/feedback/status/:scholarshipId', authMiddleware, feedbackController.getFeedbackStatus)
 app.get('/recommendations', authMiddleware, recommendationController.getRecommendations)
 app.get('/recommendation', authMiddleware, recommendationController.getSavedRecommendations)
+router.get(
+    "/recommendations/saved",
+    auth,
+    recommendationController.getSavedRecommendations
+)
 app.get('/dashboard/stats', authMiddleware, dashboardController.getStats)
 app.get('/ai/health', aiController.health)
 app.post('/ai/refresh', aiController.refresh)
