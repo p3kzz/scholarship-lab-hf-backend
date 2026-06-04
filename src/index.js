@@ -77,7 +77,7 @@ app.post('/feedback', authMiddleware, feedbackController.createFeedback)
 app.get('/feedback/status/:scholarshipId', authMiddleware, feedbackController.getFeedbackStatus)
 app.get('/recommendations', authMiddleware, recommendationController.getRecommendations)
 app.get('/recommendation', authMiddleware, recommendationController.getSavedRecommendations)
-router.get(
+app.get(
     "/recommendations/saved",
     authMiddleware,
     recommendationController.getSavedRecommendations
