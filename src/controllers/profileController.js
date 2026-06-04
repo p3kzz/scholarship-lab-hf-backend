@@ -573,12 +573,19 @@ exports.parseCV = async (req, res) => {
         }
 
         const formData = new FormData();
+        const filePath = "." + profile.cvUrl;
 
+        console.log("FILE PATH:", filePath);
+        console.log("FILE EXISTS:", fs.existsSync(filePath));
         formData.append(
             "file",
             fs.createReadStream(
                 "." + profile.cvUrl
             )
+        );
+        console.log(
+            "FORM HEADERS:",
+            formData.getHeaders()
         );
         console.log(
             "AI URL:",
