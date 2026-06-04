@@ -287,33 +287,17 @@ exports.getSavedRecommendations =
                     }
                 })
 
-            console.log("BEFORE RESPONSE");
-
-            res.json({
-                recommendations: merged,
-            });
-
-            console.log("AFTER RESPONSE");
+            return res.json({
+                recommendations
+            })
 
         } catch (error) {
 
-            console.error("========== ERROR ==========");
-
-            console.error("MESSAGE:");
-            console.error(error.message);
-
-            console.error("CODE:");
-            console.error(error.code);
-
-            console.error("STACK:");
-            console.error(error.stack);
-
-            console.error("RESPONSE:");
-            console.error(error.response?.data);
+            console.error(error)
 
             return res.status(500).json({
                 message:
-                    "Failed to generate recommendations",
-            });
+                    "Failed to fetch recommendations"
+            })
         }
     }
