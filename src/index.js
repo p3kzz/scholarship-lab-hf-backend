@@ -79,7 +79,7 @@ app.get('/recommendations', authMiddleware, recommendationController.getRecommen
 app.get('/recommendation', authMiddleware, recommendationController.getSavedRecommendations)
 router.get(
     "/recommendations/saved",
-    auth,
+    authMiddleware,
     recommendationController.getSavedRecommendations
 )
 app.get('/dashboard/stats', authMiddleware, dashboardController.getStats)
