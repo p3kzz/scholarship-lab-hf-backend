@@ -7,7 +7,11 @@ const {
 
 const aiApi = axios.create({
     baseURL: process.env.AI_API_URL,
-    timeout: 30000,
+    timeout: 120000,
+    headers: {
+        Authorization:
+            `Bearer ${process.env.HF_TOKEN}`
+    }
 })
 
 exports.health = async () => {
@@ -51,8 +55,11 @@ exports.refresh = async (
             "/refresh",
             form,
             {
-                headers:
-                    form.getHeaders()
+                headers: {
+                    Authorization:
+                        `Bearer ${process.env.HF_TOKEN}`,
+                    ...form.getHeaders()
+                }
             }
         )
 
@@ -94,8 +101,11 @@ exports.retrain = async (
             "/retrain",
             form,
             {
-                headers:
-                    form.getHeaders()
+                headers: {
+                    Authorization:
+                        `Bearer ${process.env.HF_TOKEN}`,
+                    ...form.getHeaders()
+                }
             }
         )
 
