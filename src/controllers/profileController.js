@@ -625,7 +625,14 @@ exports.parseCV = async (req, res) => {
             data: result,
         });
     } catch (error) {
-
+        if (error.response?.status === 429) {
+            return res.status(503).json({
+                success: false,
+                code: "AI_RATE_LIMIT",
+                message:
+                    "Layanan AI sedang sibuk atau terkena rate limit. Silakan coba beberapa menit lagi atau isi data secara manual."
+            });
+        }
         console.error(error);
 
         if (error.response) {
