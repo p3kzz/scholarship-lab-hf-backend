@@ -9,13 +9,14 @@ const FormData = require("form-data");
 const axios = require("axios");
 
 exports.completeOnboarding = async (req, res) => {
+
     try {
 
         const userId = req.user.userId
 
         const {
 
-            // IDENTITAS
+            // PERSONAL
             fullName,
             gender,
             birthDate,
@@ -25,7 +26,7 @@ exports.completeOnboarding = async (req, res) => {
             familyIncomeCategory,
             fromUnderrepresentedRegion,
 
-            // AKADEMIK
+            // ACADEMIC
             currentDegreeLevel,
             targetDegreeLevel,
 
@@ -44,6 +45,7 @@ exports.completeOnboarding = async (req, res) => {
 
             // ACHIEVEMENT
             olympiadLevel,
+
             leadershipCount,
             volunteerCount,
             competitionCount,
@@ -58,7 +60,7 @@ exports.completeOnboarding = async (req, res) => {
             achievementsNarrative,
             futureGoals,
 
-            // RELATIONAL
+            // RELATIONS
             hardSkills,
             softSkills,
             langSkills,
@@ -67,7 +69,6 @@ exports.completeOnboarding = async (req, res) => {
 
         } = req.body
 
-        // CREATE PROFILE
         const profile = await prisma.profile.upsert({
 
             where: {
@@ -107,6 +108,7 @@ exports.completeOnboarding = async (req, res) => {
                 extracurricularText,
 
                 olympiadLevel,
+
                 leadershipCount,
                 volunteerCount,
                 competitionCount,
@@ -157,6 +159,7 @@ exports.completeOnboarding = async (req, res) => {
                 extracurricularText,
 
                 olympiadLevel,
+
                 leadershipCount,
                 volunteerCount,
                 competitionCount,
@@ -173,10 +176,119 @@ exports.completeOnboarding = async (req, res) => {
             },
         })
 
+        // DELETE OLD RELATIONAL DATA
+
+        await prisma.$transaction([
+
+            prisma.skill.deleteMany({
+                where: {
+                    profileId: profile.id
+                }
+            }),
+
+            prisma.targetCountry.deleteMany({
+                where: {
+                    profileId: profile.id
+                }
+            }),
+
+            prisma.languageCertificate.deleteMany({
+                where: {
+                    profileId: profile.id
+                }
+            })
+
+        ])
+
+        // HARD SKILLS
+
+        if (hardSkills?.length) {
+
+            await prisma.skill.createMany({
+
+                data: hardSkills.map(skill => ({
+                    profileId: profile.id,
+                    name: skill,
+                    type: "HARD"
+                }))
+
+            })
+
+        }
+
+        // SOFT SKILLS
+
+        if (softSkills?.length) {
+
+            await prisma.skill.createMany({
+
+                data: softSkills.map(skill => ({
+                    profileId: profile.id,
+                    name: skill,
+                    type: "SOFT"
+                }))
+
+            })
+
+        }
+
+        // LANGUAGE SKILLS
+
+        if (langSkills?.length) {
+
+            await prisma.skill.createMany({
+
+                data: langSkills.map(skill => ({
+                    profileId: profile.id,
+                    name: skill,
+                    type: "LANGUAGE"
+                }))
+
+            })
+
+        }
+
+        // TARGET COUNTRIES
+
+        if (targetCountries?.length) {
+
+            await prisma.targetCountry.createMany({
+
+                data: targetCountries.map(country => ({
+                    profileId: profile.id,
+                    country
+                }))
+
+            })
+
+        }
+
+        // LANGUAGE CERTIFICATES
+
+        if (langCerts?.length) {
+
+            await prisma.languageCertificate.createMany({
+
+                data: langCerts.map(cert => ({
+
+                    profileId: profile.id,
+
+                    name: cert.testType,
+
+                    score: String(cert.score)
+
+                }))
+
+            })
+
+        }
+
         return res.status(201).json({
+
             message: "Onboarding completed",
 
-            profile,
+            profile
+
         })
 
     } catch (error) {
@@ -184,11 +296,14 @@ exports.completeOnboarding = async (req, res) => {
         console.error(error)
 
         return res.status(500).json({
-            message: "Failed to complete onboarding",
+
+            message: "Failed to complete onboarding"
+
         })
 
     }
-};
+
+}
 
 exports.getProfile = async (
     req,
